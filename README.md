@@ -2,6 +2,8 @@
 
 Sistema de gestão desenvolvido por blocos. Os Blocos 0 a 19 incluem autenticação, catálogo, estoque, PDV, vendas, caixa, financeiro operacional, demonstrativo gerencial de lucro e prejuízo, dashboard consolidado, relatórios, fichas técnicas de produtos compostos, administração de usuários, auditoria consultável, preparação da integração bancária, revisão de segurança, preparação para produção/recuperação, configuração de deploy e testes críticos. O deploy externo do Bloco 18 ainda depende das contas e do projeto Supabase de produção.
 
+O [Bloco 20 registra a revisão final](docs/final-review.md), com os itens validados localmente e as verificações que dependem da publicação.
+
 ## Desenvolvimento
 
 Requisitos: Node.js 22.12+ ou superior, npm. Para o banco local, os testes SQL e exportações via Supabase CLI, é necessário Docker em execução.
@@ -42,6 +44,29 @@ npx supabase test db
 ```
 
 Para um projeto remoto, vincule o projeto de **desenvolvimento** pela CLI e aplique as migrations antes de testar login. Não execute desenvolvimento diretamente no banco que já atende clientes.
+
+```bash
+npx supabase link --project-ref REFERENCIA_DO_PROJETO_DE_DESENVOLVIMENTO
+npx supabase db push --linked --dry-run
+npx supabase db push --linked
+npx supabase migration list --linked
+```
+
+Revise a saída do `--dry-run` antes de aplicar. Para produção, use um projeto separado, revise as migrations e siga o [checklist de liberação](docs/production-readiness.md); não reutilize a referência do desenvolvimento.
+
+### Tabelas principais
+
+| Área | Tabelas | Finalidade |
+| --- | --- | --- |
+| Acesso | `profiles` e `private.role_permissions` | Papel, ativação, MFA exigido e permissões efetivas; identidade fica em `auth.users`. |
+| Catálogo | `categories`, `products`, `product_recipe_items`, `suppliers` | Categorias, preços, produtos físicos/compostos, fichas técnicas e fornecedores. |
+| Estoque | `stock_balances`, `stock_movements` | Saldo atual e livro de entradas, saídas, perdas, ajustes, vendas e devoluções. |
+| Vendas | `sales`, `sale_items`, `sale_item_components`, `sale_payments`, `sale_cancellation_requests` | Venda, preços/custos históricos, consumo de ingredientes, pagamentos e aprovação de cancelamento. |
+| Caixa | `cash_sessions`, `cash_movements` | Abertura, suprimentos, sangrias, pagamentos, estornos e fechamento por operador. |
+| Financeiro | `financial_entries`, `financial_expenses`, `financial_receivables` | Receitas e estornos, despesas/contas a pagar e contas a receber. |
+| Auditoria | `audit_logs` | Eventos imutáveis das operações e alterações de acesso. |
+
+O bucket privado `product-images` guarda os arquivos; a tabela `storage.objects` guarda apenas seus metadados. As operações com dados de negócio usam grants, RLS e funções transacionais. Os fluxos de venda, estoque, caixa e financeiro estão descritos em **Estado atual** abaixo, e são exercitados pela [suíte de testes críticos](docs/testing.md).
 
 ### Primeiro ADMIN
 
