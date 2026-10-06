@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "build:production": "npm run check:production && npm run build",
     "check:production": "node scripts/check-production-env.mjs",
+    "test:db:critical": "supabase db query --linked --project-ref jahyjzgdsgmtdutqhcea --file supabase/tests/003_critical_flows.sql",
     "lint": "oxlint",
     "preview": "vite preview"
   },

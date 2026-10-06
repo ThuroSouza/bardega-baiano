@@ -1,6 +1,6 @@
 # Bardega do Baiano
 
-Sistema de gestão desenvolvido por blocos. Os Blocos 0 a 17 incluem autenticação, catálogo, estoque, PDV, vendas, caixa, financeiro operacional, demonstrativo gerencial de lucro e prejuízo, dashboard consolidado, relatórios, fichas técnicas de produtos compostos, administração de usuários, auditoria consultável, preparação da integração bancária, revisão de segurança e preparação para produção/recuperação.
+Sistema de gestão desenvolvido por blocos. Os Blocos 0 a 19 incluem autenticação, catálogo, estoque, PDV, vendas, caixa, financeiro operacional, demonstrativo gerencial de lucro e prejuízo, dashboard consolidado, relatórios, fichas técnicas de produtos compostos, administração de usuários, auditoria consultável, preparação da integração bancária, revisão de segurança, preparação para produção/recuperação, configuração de deploy e testes críticos. O deploy externo do Bloco 18 ainda depende das contas e do projeto Supabase de produção.
 
 ## Desenvolvimento
 
@@ -24,6 +24,10 @@ npm run lint
 O projeto Supabase atual é de desenvolvimento. Antes de publicar, crie um projeto de produção separado e leia o [checklist de produção](docs/production-readiness.md) e o [procedimento de backup e recuperação](docs/backup-recovery.md). Use `.env.production.example` para criar `.env.production.local` com credenciais publicáveis do novo projeto; execute `npm run build:production` para validar os ambientes antes de gerar o pacote de liberação. `npm run build` continua disponível para checagem técnica local.
 
 O [guia do Cloudflare Pages](docs/cloudflare-deploy.md) define a branch `main`, o build, as variáveis, o domínio HTTPS e a verificação das rotas da SPA. A publicação depende de um repositório GitHub remoto, conta Cloudflare e projeto Supabase de produção.
+
+## Testes críticos
+
+Execute `npm run test:db:critical` somente no ambiente de desenvolvimento configurado. A [matriz de testes e limitações](docs/testing.md) cobre vendas, cancelamento, estoque, caixa, financeiro, RLS, permissões, lucro e idempotência. O teste SQL abre uma transação e encerra com `ROLLBACK`.
 
 ## Supabase
 
