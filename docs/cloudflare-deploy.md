@@ -22,7 +22,7 @@ Conclua os bloqueios do [checklist de produção](production-readiness.md): proj
 
 O Vite produz `dist/index.html` e **não** produz `dist/404.html`. Nesse caso, a Cloudflare Pages [serve `index.html` para caminhos sem arquivo](https://developers.cloudflare.com/pages/configuration/serving-pages/); o React Router resolve a rota depois. Não adicione `404.html` na raiz nem uma regra `_redirects` genérica que intercepte os arquivos de `/assets/`.
 
-Após publicar, abra diretamente em uma aba nova `https://DOMINIO/financeiro`, `https://DOMINIO/vendas` e `https://DOMINIO/produtos/123`. A resposta deve carregar o aplicativo (um visitante sem sessão pode ser redirecionado pelo **React Router** para `/login`). Confira também `https://DOMINIO/assets/ARQUIVO-INEXISTENTE.js`: esse caminho não deve devolver HTML de login como JavaScript. Confirme que `/redefinir-senha` abre corretamente por link de Auth.
+Após publicar, abra diretamente em uma aba nova `https://DOMINIO/financeiro`, `https://DOMINIO/vendas` e `https://DOMINIO/produtos/123`. A resposta deve carregar o aplicativo (um visitante sem sessão pode ser redirecionado pelo **React Router** para `/login`). Confirme que `/redefinir-senha` abre corretamente por link de Auth e que os arquivos reais de `/assets/` carregam com o tipo correto.
 
 ## Verificação pós-deploy
 
